@@ -1,87 +1,95 @@
-Redux는 복잡성을 낮추어서 복잡한 어플리케이션 개발을 가능하게 한다.
+# Redux
 
-하나의 객체 (state)에 데이터를 넣는 방식으로 복잡성을 해결한다.
+1. ###  Redux 란?
 
+   Redux는 상태 관리 라이브러리로써 컴포넌트의 상태 관련 로직들을 다른 파일로 분리시켜 효율적으로 관리 할 수 있고 컴포넌트끼리 상태를 공유할 때 여러 컴포넌트를 거치지 않고 쉽게 상태 값을 전달 할 수 있다.
 
+   <br>
 
-Redux로는 디스패처, 리듀서로만 데이터를 변경 할 수 있다.
+2. ### Redux의 개념
 
+   - #####  Store (스토어)
 
+     Redux 에서는 한 애플리케이션 당 하나의 스토어를 만들게 된다. 스토어에는 현재의 State와 Reducer가 들어가 있고 추가적인 내장 함수들이 있다.
 
-store 안에는 state 라는 정보가 있음.
+     <br>
 
+   - ##### Reducer (리듀서)
 
+     리듀서는 변화를 일으키는 함수로 State에 새로운 상태를 반환한다.
 
-var store = Redux.createStore(reducer); 형식으로 만드는데 reducer가 필요함.
+     ```javascript
+     function reducer(state, action){
+     	// ...상태 업데이트 로직
+     	return newState;
+     }
+     ```
 
+     `state` 와 `action` 두 가지의 파라미터를 받으며 반환 할 새 상태를 return 해준다.
 
+     <br>
 
-reducer 은 함수로써
+   - ##### Action (액션)
 
+     상태에 변화가 필요 할 때 액션을 발생시켜야 한다. 액션은 하나의 객체로써 표현되는데
 
+     ```javascript
+     {
+         type:"TYPE_NAME"
+     }
+     ```
 
-function reducer (oldState,action){
+     형식처럼 `type` 필드를 필수적으로 포함하는 형식이다.
 
-}
+     ```javascript
+     {
+         type: "CREATE_USER",
+         user: {
+             name:"Lee jongmin",
+             age:25
+         }
+     }
+     ```
 
-형식이다
+     처럼 type 이외의 값을 마음대로 넣을 수 있다.
 
+     <br>
 
+   - ##### Dispatch (디스패치)
 
-render은 UI를 만들어주는 역할을 한다.
+     디스패치는 스토어 내장 함수 중 하나로써, 액션을 발생 시키는 역할을 한다.
 
+     ```javascript
+     let state = store.getState();
+     let action = {type:'SELECT', id:1};
+     store.dispatch(action);
+     ```
 
+     위 처럼 `dispatch`는 `action`을 파라미터로 전달해야 한다.
 
-function render(){
+     <br>
 
-​	var state = store.getState();
+     `dispatch`를 호출하게 되면 `store`는 `reducer` 함수를 실행시켜서 새로운 상태를 만들게 된다.
 
-​	document.querySelector('#app').innerHTML = .... 
+     <br>
 
-}
+   - ##### Subscribe (구독)
 
+     구독은 스토어의 내장 함수중 하나로써 액션이 디스패치 되었을 때 마다 전달한 함수가 호출되는 함수이다.
 
+     ```javascript
+     let state = store.getState();
+     
+     function article = {
+         //... 디스패치를 포함한 함수
+     }
+     
+     state.subscribe(article);
+     ```
 
-형식
+     위와 같은 형태를 가지며 위에서 article 내의 액션이 디스패치가 될 경우에 article 함수를 실행시켜준다.
 
+     <br>
 
-
-subscribe는 state가 바뀔때마다 렌더가 되면서 UI가 갱신되는데
-
-store.subscribe(render); 형식이다.
-
-
-
-action은 
-
-{type:'create', payload:{title:title, desc:desc}} 형식으로 dispatch를 통해 보낼 것이다.
-
-
-
-dispatch는 
-
-1. reducer을 호출해서 state 값을 바꾼다
-2. subscribe을 이용해서 render를 호출해준다
-
-
-
-dipsatch가 reducer을 호출 할 때에는 현재의 state 값과 action 값을 전달한다.
-
-
-
-reducer은 return 값에 새로운 state 값을 준다.
-
-
-
-객체를 복사할 때에는 
-
-Objcect.assign() 을 이용하는데
-
-assign을 할때에는 맨처음엔 무조건 빈 객체인 {}를 적고 그 뒤에는 속성을 적는다.
-
-
-
-Object.assign({},{name:'leejongmin'},{city:'seoul'});
-
--> {name:"leejongmin,city:"seoul"}
+     이를 활용하여 변경 내용을 UI에 적용 시켜주는 기능을 구현 할 수 있다.
 
